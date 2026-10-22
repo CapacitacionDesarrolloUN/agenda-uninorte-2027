@@ -165,7 +165,7 @@ h1 em{font-style:normal;color:var(--rojo)}
 .tasks li.Revisado{background:var(--rev-soft);border-color:var(--rev);color:var(--rev-ink)}
 .tasks li b{display:block;font-weight:700;overflow-wrap:break-word;hyphens:auto}
 .tasks:empty{display:none}
-.tasks li time{font-family:var(--f-data);font-size:11px;opacity:.85}
+.tasks li time{font-family:var(--f-data);font-size:11px;opacity:.85;white-space:nowrap}
 .more{font-size:12px;color:var(--muted);font-weight:600;padding:0 2px}
 .add-hint{margin:auto 10px 10px;font-size:12px;color:var(--muted);border:1.5px dashed var(--line);border-radius:8px;padding:7px;text-align:center}
 .day:hover .add-hint{border-color:var(--rojo);color:var(--rojo)}
@@ -265,6 +265,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--rojo);outline:none;bo
 .board-h .zoom{padding:5px 12px;font-size:12.5px;background:#fff;color:#0B5CFF}
 .board-h .zoom:hover{background:#EAF1FF}
 .linkrow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+.hora{display:flex;gap:6px;min-width:0}
+.hora input{flex:1;min-width:0;font-variant-numeric:tabular-nums}
+.ampm{display:flex;flex-shrink:0;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg)}
+.ampm button{border:0;background:none;padding:0 10px;font-size:12.5px;font-weight:800;color:var(--muted);letter-spacing:.04em;transition:background-color .2s,color .2s}
+.ampm button[aria-pressed="true"]{background:var(--rojo);color:#fff}
+.ampm button:not([aria-pressed="true"]):hover{color:var(--rojo)}
 textarea{resize:vertical;min-height:70px;font:inherit;font-size:14.5px;line-height:1.4}
 label .opt{font-weight:600;opacity:.75;letter-spacing:0}
 .obs-flag{display:inline-grid;place-items:center;width:17px;height:17px;border-radius:50%;background:var(--rojo);color:#fff;font-size:11.5px;font-weight:900;line-height:1;
@@ -483,8 +489,8 @@ h1.swap,.range.swap{animation:rise .45s var(--ease) backwards}
       <h3 id="fTitle">Nueva tarea</h3>
       <label>Nombre<input id="fNombre" maxlength="120" placeholder="Ej.: Taller de liderazgo para coordinadores"></label>
       <div class="row">
-        <label>Hora inicio<input id="fIni" type="time"></label>
-        <label>Hora fin<input id="fFin" type="time"></label>
+        <label>Hora inicio<span class="hora"><input id="fIni" inputmode="numeric" autocomplete="off" maxlength="8" placeholder="Ej.: 200 o 2:00"><div class="ampm" role="group" aria-label="AM o PM"><button type="button" data-v="am" aria-pressed="true">AM</button><button type="button" data-v="pm" aria-pressed="false">PM</button></div></span></label>
+        <label>Hora fin<span class="hora"><input id="fFin" inputmode="numeric" autocomplete="off" maxlength="8" placeholder="Ej.: 400 o 4:00"><div class="ampm" role="group" aria-label="AM o PM"><button type="button" data-v="am" aria-pressed="true">AM</button><button type="button" data-v="pm" aria-pressed="false">PM</button></div></span></label>
       </div>
       <div class="row">
         <label>Modalidad
@@ -742,7 +748,7 @@ function renderWeek(){
       <div class="day-h"><div><div class="dow">${DIAS[i].slice(0,3)}</div><div class="num">${d.getDate()}</div></div>${k===todayKey?'<span class="today-tag">HOY</span>':""}</div>
       ${sp?`<div class="special ${sp[0]==="Carnaval"?"carnaval":""}">${sp[0]==="Carnaval"?"Carnaval · ":""}${esc(sp[1])}</div>`:""}
       ${(EVENTOS[k]||[]).map(n => `<div class="special uni">${esc(n)}</div>`).join("")}
-      <ul class="tasks">${shown.map(t => `<li class="${t.estado}">${obsPendiente(t)?'<span class="obs-flag" title="Tiene observaciones pendientes" aria-label="Tiene observaciones pendientes">!</span>':""}${t.inicio?`<time>${t.inicio}</time>`:""}<b>${esc(t.nombre)}</b></li>`).join("")}</ul>
+      <ul class="tasks">${shown.map(t => `<li class="${t.estado}">${obsPendiente(t)?'<span class="obs-flag" title="Tiene observaciones pendientes" aria-label="Tiene observaciones pendientes">!</span>':""}${t.inicio?`<time>${fmtH(t.inicio)}</time>`:""}<b>${esc(t.nombre)}</b></li>`).join("")}</ul>
       ${list.length>4?`<div class="more">+${list.length-4} más</div>`:""}
       <div class="add-hint">${list.length?"Ver tablero":"+ Agregar"}</div>
     </div>`;
@@ -835,7 +841,7 @@ function renderBoard(){
   $("bCounts").innerHTML = ESTADOS.map((s,i) => `<div class="col-count st-${s}" style="--i:${i}"><b>${list.filter(t=>t.estado===s).length}</b>${s}</div>`).join("");
   $("bList").innerHTML = list.length ? list.map((t,i) => `
     <article class="item ${t.estado}" style="--i:${i+4}" data-id="${t.id}">
-      <div class="t">${t.inicio?`<b>${t.inicio}</b>${t.fin||""}`:"<b>—</b>sin hora"}</div>
+      <div class="t">${t.inicio?`<b>${fmtH(t.inicio)}</b>${fmtH(t.fin)}`:"<b>—</b>sin hora"}</div>
       <div style="min-width:0">
         <h4>${obsPendiente(t)?'<span class="obs-flag" aria-label="Observación pendiente">!</span>':""}${esc(t.nombre)}</h4>
         ${t.modalidad?`<span class="mod ${t.modalidad}">${t.modalidad}</span>`:""}${t.ubicacion && t.modalidad!=="Virtual"?`<span class="loc">${esc(t.ubicacion)}</span>`:""}
@@ -855,7 +861,7 @@ $("bList").onclick = async e => {
   const a = e.target.closest("button[data-a]")?.dataset.a;
   if (a==="edit") {
     editingId = t.id;
-    $("fNombre").value = t.nombre; $("fIni").value = t.inicio||""; $("fFin").value = t.fin||""; $("fUbi").value = t.ubicacion||""; $("fLink").value = t.link||""; $("fObs").value = t.observaciones||""; $("fEstado").value = t.estado; $("fMod").value = t.modalidad||""; syncMod(); clearMiss();
+    $("fNombre").value = t.nombre; setHora("fIni", t.inicio); setHora("fFin", t.fin); $("fUbi").value = t.ubicacion||""; $("fLink").value = t.link||""; $("fObs").value = t.observaciones||""; $("fEstado").value = t.estado; $("fMod").value = t.modalidad||""; syncMod(); clearMiss();
     $("fTitle").textContent = "Editar tarea"; $("fSave").textContent = "Guardar cambios"; $("fCancel").hidden = false;
     $("form").scrollIntoView({behavior:"smooth", block:"nearest"}); $("fNombre").focus();
   }
@@ -870,8 +876,59 @@ $("bList").onclick = async e => {
   }
 };
 
+// ---------- Horas escritas a mano: "200", "2:00", "2.30", "1430", "2pm" ----------
+// Se guardan como "HH:MM" (24 h). AM/PM se elige solo: 7:00–11:59 AM; 12:00–6:59 PM; se puede cambiar a mano.
+const fmtH = v => { if (!v) return ""; const [h,m] = v.split(":").map(Number); return `${h%12||12}:${pad(m)} ${h<12?"a.m.":"p.m."}`; };
+function parseHora(txt){
+  const raw = String(txt||"").toLowerCase().trim(); if (!raw) return null;
+  const suf = /p\.?\s*m|\bp\b/.test(raw) ? "pm" : /a\.?\s*m|\ba\b/.test(raw) ? "am" : "";
+  let h, m, t = raw.replace(/[^0-9:.,]/g,"");
+  if (/[:.,]/.test(t)) { const [a,b=""] = t.split(/[:.,]/); h = +a; m = b==="" ? 0 : +b.padEnd(2,"0").slice(0,2); if (a==="") return null; }
+  else if (t.length<=2 && t.length) { h = +t; m = 0; }
+  else if (t.length===3) { h = +t[0]; m = +t.slice(1); }
+  else if (t.length===4) { h = +t.slice(0,2); m = +t.slice(2); }
+  else return null;
+  if (!(h>=0 && h<=23 && m>=0 && m<=59)) return null;
+  return { h, m, suf };
+}
+const autoAmpm = h => (h>=12 || (h>=1 && h<=6)) ? "pm" : "am";
+const ampmOf = id => $(id).nextElementSibling.querySelector('[aria-pressed="true"]').dataset.v;
+function setAmpm(id, v){ $(id).nextElementSibling.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v===v)); }
+const ampmManual = { fIni:false, fFin:false };
+function readHora(id){
+  const p = parseHora($(id).value); if (!p) return null;
+  if (p.h > 12 || p.h===0) return `${pad(p.h)}:${pad(p.m)}`;          // ya viene en 24 h
+  const pm = ampmOf(id)==="pm";
+  return `${pad(p.h%12 + (pm?12:0))}:${pad(p.m)}`;
+}
+function setHora(id, v){
+  $(id).classList.remove("miss");
+  if (!v) { $(id).value = ""; setAmpm(id,"am"); ampmManual[id] = false; return; }
+  const [h,m] = v.split(":").map(Number);
+  $(id).value = `${h%12||12}:${pad(m)}`; setAmpm(id, h<12?"am":"pm"); ampmManual[id] = true;
+}
+["fIni","fFin"].forEach(id => {
+  $(id).addEventListener("input", () => {
+    const p = parseHora($(id).value); if (!p) return;
+    if (p.suf) { setAmpm(id, p.suf); ampmManual[id] = true; }
+    else if (p.h > 12) setAmpm(id, "pm");
+    else if (!ampmManual[id]) setAmpm(id, autoAmpm(p.h));
+  });
+  $(id).addEventListener("blur", () => {
+    const v = $(id).value.trim(); if (!v) return;
+    const p = parseHora(v); if (!p) { $(id).classList.add("miss"); return; }
+    const h = p.h>12 ? p.h-12 : (p.h||12);
+    if (p.h>12) setAmpm(id,"pm"); else if (p.h===0) setAmpm(id,"am");
+    $(id).value = `${h}:${pad(p.m)}`;
+  });
+  $(id).nextElementSibling.addEventListener("click", e => {
+    const b = e.target.closest("button[data-v]"); if (!b) return;
+    e.preventDefault(); setAmpm(id, b.dataset.v); ampmManual[id] = true;
+  });
+});
+
 function resetForm(){
-  editingId = null; $("form").reset(); $("fEstado").value = "Pendiente"; $("fErr").hidden = true; syncMod(); clearMiss();
+  editingId = null; $("form").reset(); setHora("fIni",""); setHora("fFin",""); $("fEstado").value = "Pendiente"; $("fErr").hidden = true; syncMod(); clearMiss();
   $("fTitle").textContent = "Nueva tarea"; $("fSave").textContent = "Agregar tarea"; $("fCancel").hidden = true;
 }
 $("fCancel").onclick = resetForm;
@@ -887,7 +944,9 @@ async function copyText(txt, btn){
 $("fCopy").onclick = e => copyText($("fLink").value.trim(), e.currentTarget);
 $("form").onsubmit = async e => {
   e.preventDefault();
-  const nombre = $("fNombre").value.trim(), inicio = $("fIni").value, fin = $("fFin").value, modalidad = $("fMod").value;
+  const nombre = $("fNombre").value.trim(), modalidad = $("fMod").value;
+  const inicio = readHora("fIni") || "", fin = readHora("fFin") || "";
+  const malIni = $("fIni").value.trim() && !inicio, malFin = $("fFin").value.trim() && !fin;
   const ubicacion = $("fUbi").value.trim(), link = $("fLink").value.trim();
   const falta = [];
   const need = (ok, id, txt) => { $(id).classList.toggle("miss", !ok); if (!ok) falta.push(txt); };
@@ -895,13 +954,14 @@ $("form").onsubmit = async e => {
   const flexible = YEAR===2026;
   need(nombre, "fNombre", "el nombre");
   if (!flexible) {
-    need(inicio, "fIni", "la hora de inicio");
-    need(fin, "fFin", "la hora de fin");
+    need($("fIni").value.trim(), "fIni", "la hora de inicio");
+    need($("fFin").value.trim(), "fFin", "la hora de fin");
     need(modalidad, "fMod", "la modalidad");
     if (modalidad && modalidad!=="Virtual") need(ubicacion, "fUbi", "la ubicación");
     if (modalidad && modalidad!=="Presencial") need(link, "fLink", "el link de la sesión");
   }
   let err = falta.length ? `Te falta ${falta.length>1 ? falta.slice(0,-1).join(", ")+" y "+falta.at(-1) : falta[0]}.` : "";
+  if (!err && (malIni || malFin)) { err = "Escribe la hora así: 200, 2:00 o 2:30."; if (malIni) $("fIni").classList.add("miss"); if (malFin) $("fFin").classList.add("miss"); }
   if (!err && inicio && fin && fin <= inicio) { err = "La hora de fin debe ser después de la de inicio."; $("fFin").classList.add("miss"); }
   if (!err && link && modalidad!=="Presencial" && !/^https?:\/\//i.test(link)) { err = "El link debe empezar por https://"; $("fLink").classList.add("miss"); }
   $("fErr").hidden = !err; $("fErr").textContent = err;
