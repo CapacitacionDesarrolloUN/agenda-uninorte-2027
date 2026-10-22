@@ -322,7 +322,7 @@ input:focus,select:focus{border-color:var(--rojo);outline:none;box-shadow:0 0 0 
             <button type="button" id="miniNext" aria-label="Mes siguiente">›</button>
           </div>
           <div class="mini-grid" id="mini"></div>
-          <div class="mini-note">Toca un día para abrir su tablero. Los números en <b>rojo</b> son festivos.</div>
+          <div class="mini-note">Toca un día para ir a su semana. Los números en <b>rojo</b> son festivos.</div>
         </div>
         <div class="upcoming">
           <h3>Próximos festivos y fechas</h3>
@@ -560,7 +560,7 @@ function renderMini(){
   }
   $("mini").innerHTML = h;
 }
-$("mini").onclick = e => { const b = e.target.closest("button[data-k]"); if (!b) return; goWeek(parse(b.dataset.k)); openBoard(b.dataset.k); };
+$("mini").onclick = e => { const b = e.target.closest("button[data-k]"); if (!b) return; goWeek(parse(b.dataset.k)); };
 $("miniPrev").onclick = () => { if (miniMonth>0) { miniMonth--; renderMini(); } };
 $("miniNext").onclick = () => { if (miniMonth<11) { miniMonth++; renderMini(); } };
 
