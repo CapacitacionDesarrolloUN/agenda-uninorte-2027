@@ -257,14 +257,30 @@ h1 em{font-style:normal;color:var(--rojo)}
 .form h3{margin:0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--rojo)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 label{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.03em}
-input,select{border:1.5px solid var(--line);background:var(--bg);border-radius:10px;padding:9px 11px;font-size:14.5px;font-weight:500;width:100%;min-width:0}
-input:focus,select:focus{border-color:var(--rojo);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--rojo) 20%,transparent)}
+input,select,textarea{border:1.5px solid var(--line);background:var(--bg);border-radius:10px;padding:9px 11px;font-size:14.5px;font-weight:500;width:100%;min-width:0}
+input:focus,select:focus,textarea:focus{border-color:var(--rojo);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--rojo) 20%,transparent)}
 .zoom{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 16px;font-weight:700;text-decoration:none;background:#0B5CFF;color:#fff;white-space:nowrap}
 .zoom:hover{background:#0848C8}
 .zoom svg{width:18px;height:18px}
 .board-h .zoom{padding:5px 12px;font-size:12.5px;background:#fff;color:#0B5CFF}
 .board-h .zoom:hover{background:#EAF1FF}
 .linkrow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+textarea{resize:vertical;min-height:70px;font:inherit;font-size:14.5px;line-height:1.4}
+label .opt{font-weight:600;opacity:.75;letter-spacing:0}
+.obs-flag{display:inline-grid;place-items:center;width:17px;height:17px;border-radius:50%;background:var(--rojo);color:#fff;font-size:11.5px;font-weight:900;line-height:1;
+  margin-right:5px;vertical-align:1px;flex-shrink:0;box-shadow:0 0 0 2px color-mix(in srgb,var(--rojo) 25%,transparent);animation:flag 2s ease-in-out infinite}
+@keyframes flag{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.tasks li .obs-flag{float:right;margin:0 0 0 4px}
+.obs{margin-top:10px;border-radius:10px;padding:10px 12px;background:color-mix(in srgb,var(--rojo) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--rojo) 30%,transparent);
+  display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:start}
+.obs small{grid-column:1/-1;display:flex;align-items:center;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--rojo)}
+.obs p{margin:0;font-size:13.5px;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}
+.obs button{border:0;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:800;background:#1E9E5A;color:#fff;white-space:nowrap;transition:transform .15s var(--ease),background-color .2s}
+.obs button:active{transform:scale(.92)}
+.obs.ok{background:color-mix(in srgb,#1E9E5A 8%,var(--surface));border-color:color-mix(in srgb,#1E9E5A 30%,transparent)}
+.obs.ok small{color:#1E9E5A}
+.obs.ok p{color:var(--muted)}
+.obs.ok button{background:none;color:var(--muted);border:1px solid var(--line)}
 .join{display:inline-block;margin-top:4px;font-size:13px;font-weight:700;color:#0B5CFF;overflow-wrap:anywhere}
 .miss{border-color:var(--rojo)!important;background:color-mix(in srgb,var(--rojo) 6%,var(--bg))}
 .mod{display:inline-block;margin-top:4px;margin-right:6px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:5px;background:var(--negro);color:#fff}
@@ -375,7 +391,7 @@ h1.swap,.range.swap{animation:rise .45s var(--ease) backwards}
 .seg button,.item .acts button,.copy,.zoom,.board-h .daynav button,.board-h .close{transition:background-color .2s,color .2s,transform .15s var(--ease)}
 .board-h .daynav button:active,.board-h .close:active,.seg button:active{transform:scale(.92)}
 .form .err:not([hidden]){animation:shake .4s ease}
-.form input,.form select{transition:border-color .2s,box-shadow .2s,background-color .2s}
+.form input,.form select,.form textarea{transition:border-color .2s,box-shadow .2s,background-color .2s}
 
 /* Indicador en vivo */
 .sync.ok i{animation:pulse 2.2s ease-out infinite}
@@ -487,6 +503,7 @@ h1.swap,.range.swap{animation:rise .45s var(--ease) backwards}
         <label>Link de la sesión<input id="fLink" type="url" inputmode="url" placeholder="Pega aquí el link de Zoom"></label>
         <div class="linkbtns"><a class="zoom" href="https://zoom.us/meeting#/upcoming" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="3"/><path d="M16 10l6-3v10l-6-3z"/></svg>Crear link</a><button class="copy" type="button" id="fCopy">Copiar link</button></div>
       </div>
+      <label>Observaciones <span class="opt">(opcional)</span><textarea id="fObs" maxlength="1000" rows="3" placeholder="Algo pendiente o para tener en cuenta en esta tarea"></textarea></label>
       <div class="err" id="fErr" hidden></div>
       <div class="btns">
         <button class="btn" type="button" id="fCancel" hidden>Cancelar edición</button>
@@ -567,7 +584,7 @@ const setBounds = () => { FIRST = monday(new Date(YEAR,0,1)); LAST = monday(new 
 
 // ---------- Almacenamiento: tabla "tareas" en Supabase, compartida y en vivo; copia en el navegador como respaldo ----------
 const LS_KEY = "uninorte-agenda-2027";
-const FIELDS = ["nombre","inicio","fin","modalidad","ubicacion","link","estado"];
+const FIELDS = ["nombre","inicio","fin","modalidad","ubicacion","link","estado","observaciones"];
 let tasks = {};          // "YYYY-MM-DD" -> [ {id, inicio, fin, nombre, modalidad, ubicacion, link, estado} ]
 let db = null;           // cliente de Supabase, cuando hay configuración
 function lsGet(k){ try { return localStorage.getItem(k); } catch { return null; } }
@@ -576,8 +593,9 @@ try { tasks = JSON.parse(lsGet(LS_KEY) || "{}") || {}; } catch { tasks = {}; }
 const cache = () => lsSet(LS_KEY, JSON.stringify(tasks));
 
 function setSync(state, txt){ const el = $("sync"); el.className = `sync ${state}`; el.lastElementChild.textContent = txt; }
-const toRow = (fecha, t) => ({ id: t.id, fecha, ...Object.fromEntries(FIELDS.map(f => [f, t[f] ?? ""])) });
-const fromRow = r => ({ id: r.id, ...Object.fromEntries(FIELDS.map(f => [f, r[f] ?? ""])) });
+const toRow = (fecha, t) => ({ id: t.id, fecha, ...Object.fromEntries(FIELDS.map(f => [f, t[f] ?? ""])), obs_ok: !!t.obs_ok });
+const fromRow = r => ({ id: r.id, ...Object.fromEntries(FIELDS.map(f => [f, r[f] ?? ""])), obs_ok: !!r.obs_ok });
+const obsPendiente = t => !!(t.observaciones||"").trim() && !t.obs_ok;
 function dropLocal(id){
   for (const k of Object.keys(tasks)) { tasks[k] = tasks[k].filter(t => t.id!==id); if (!tasks[k].length) delete tasks[k]; }
 }
@@ -586,7 +604,13 @@ function putLocal(r){ dropLocal(r.id); (tasks[r.fecha] ||= []).push(fromRow(r));
 async function saveTask(dayKey, t){
   cache();
   if (!db) return;
-  const { error } = await db.from("tareas").upsert(toRow(dayKey, t));
+  let { error } = await db.from("tareas").upsert(toRow(dayKey, t));
+  // Si la tabla todavía no tiene las columnas de observaciones, guarda el resto de la tarea
+  if (error && /observaciones|obs_ok|PGRST204/i.test(`${error.code} ${error.message}`)) {
+    const { observaciones, obs_ok, ...rest } = toRow(dayKey, t);
+    ({ error } = await db.from("tareas").upsert(rest));
+    if (!error) { setTimeout(() => toast("Falta actualizar la base para guardar observaciones."), 2400); return; }
+  }
   if (error) toast("No se pudo guardar en la nube. Revisa tu conexión.");
 }
 async function removeTask(id){
@@ -718,7 +742,7 @@ function renderWeek(){
       <div class="day-h"><div><div class="dow">${DIAS[i].slice(0,3)}</div><div class="num">${d.getDate()}</div></div>${k===todayKey?'<span class="today-tag">HOY</span>':""}</div>
       ${sp?`<div class="special ${sp[0]==="Carnaval"?"carnaval":""}">${sp[0]==="Carnaval"?"Carnaval · ":""}${esc(sp[1])}</div>`:""}
       ${(EVENTOS[k]||[]).map(n => `<div class="special uni">${esc(n)}</div>`).join("")}
-      <ul class="tasks">${shown.map(t => `<li class="${t.estado}">${t.inicio?`<time>${t.inicio}</time>`:""}<b>${esc(t.nombre)}</b></li>`).join("")}</ul>
+      <ul class="tasks">${shown.map(t => `<li class="${t.estado}">${obsPendiente(t)?'<span class="obs-flag" title="Tiene observaciones pendientes" aria-label="Tiene observaciones pendientes">!</span>':""}${t.inicio?`<time>${t.inicio}</time>`:""}<b>${esc(t.nombre)}</b></li>`).join("")}</ul>
       ${list.length>4?`<div class="more">+${list.length-4} más</div>`:""}
       <div class="add-hint">${list.length?"Ver tablero":"+ Agregar"}</div>
     </div>`;
@@ -813,9 +837,10 @@ function renderBoard(){
     <article class="item ${t.estado}" style="--i:${i+4}" data-id="${t.id}">
       <div class="t">${t.inicio?`<b>${t.inicio}</b>${t.fin||""}`:"<b>—</b>sin hora"}</div>
       <div style="min-width:0">
-        <h4>${esc(t.nombre)}</h4>
+        <h4>${obsPendiente(t)?'<span class="obs-flag" aria-label="Observación pendiente">!</span>':""}${esc(t.nombre)}</h4>
         ${t.modalidad?`<span class="mod ${t.modalidad}">${t.modalidad}</span>`:""}${t.ubicacion && t.modalidad!=="Virtual"?`<span class="loc">${esc(t.ubicacion)}</span>`:""}
         ${/^https?:\/\//i.test(t.link||"") && t.modalidad!=="Presencial"?`<div><a class="join" href="${esc(t.link)}" target="_blank" rel="noopener">Abrir sesión ↗</a><button type="button" class="copy sm" data-a="copy">Copiar link</button></div>`:""}
+        ${(t.observaciones||"").trim()?`<div class="obs ${t.obs_ok?"ok":""}"><small>${t.obs_ok?"✓ Observación atendida":"Observaciones"}</small><p>${esc(t.observaciones)}</p><button type="button" data-a="obs">${t.obs_ok?"Reabrir":"Realizado"}</button></div>`:""}
         <div class="seg" role="group" aria-label="Estado">${ESTADOS.map(s => `<button type="button" class="${s}" data-s="${s}" aria-pressed="${t.estado===s}"><i class="dot-${s}"></i>${s}</button>`).join("")}</div>
       </div>
       <div class="acts"><button type="button" data-a="edit">Editar</button><button type="button" data-a="del">Borrar</button></div>
@@ -830,11 +855,12 @@ $("bList").onclick = async e => {
   const a = e.target.closest("button[data-a]")?.dataset.a;
   if (a==="edit") {
     editingId = t.id;
-    $("fNombre").value = t.nombre; $("fIni").value = t.inicio||""; $("fFin").value = t.fin||""; $("fUbi").value = t.ubicacion||""; $("fLink").value = t.link||""; $("fEstado").value = t.estado; $("fMod").value = t.modalidad||""; syncMod(); clearMiss();
+    $("fNombre").value = t.nombre; $("fIni").value = t.inicio||""; $("fFin").value = t.fin||""; $("fUbi").value = t.ubicacion||""; $("fLink").value = t.link||""; $("fObs").value = t.observaciones||""; $("fEstado").value = t.estado; $("fMod").value = t.modalidad||""; syncMod(); clearMiss();
     $("fTitle").textContent = "Editar tarea"; $("fSave").textContent = "Guardar cambios"; $("fCancel").hidden = false;
     $("form").scrollIntoView({behavior:"smooth", block:"nearest"}); $("fNombre").focus();
   }
   if (a==="copy") { copyText(t.link, e.target.closest("button")); return; }
+  if (a==="obs") { t.obs_ok = !t.obs_ok; refresh(); await saveTask(openDay, t); toast(t.obs_ok ? "Observación marcada como realizada" : "Observación pendiente otra vez"); return; }
   if (a==="del") {
     const btn = e.target.closest("button");
     if (!btn.classList.contains("really")) { btn.classList.add("really"); btn.textContent = "¿Seguro?"; setTimeout(() => { if (btn.isConnected) { btn.classList.remove("really"); btn.textContent = "Borrar"; } }, 3000); return; }
@@ -880,11 +906,13 @@ $("form").onsubmit = async e => {
   if (!err && link && modalidad!=="Presencial" && !/^https?:\/\//i.test(link)) { err = "El link debe empezar por https://"; $("fLink").classList.add("miss"); }
   $("fErr").hidden = !err; $("fErr").textContent = err;
   if (err) { $("fErr").style.animation = "none"; void $("fErr").offsetWidth; $("fErr").style.animation = ""; return; }
-  const data = { nombre, inicio, fin, modalidad, ubicacion: modalidad==="Virtual" ? "" : ubicacion, link: modalidad==="Presencial" ? "" : link, estado: $("fEstado").value };
+  const observaciones = $("fObs").value.trim();
+  const data = { nombre, inicio, fin, modalidad, ubicacion: modalidad==="Virtual" ? "" : ubicacion, link: modalidad==="Presencial" ? "" : link, estado: $("fEstado").value, observaciones };
   const list = tasks[openDay] || (tasks[openDay] = []);
   const wasEdit = !!editingId;
   let t = wasEdit && list.find(x => x.id===editingId);
-  if (t) Object.assign(t, data); else list.push(t = { id: uid(), ...data });
+  if (t) { if ((t.observaciones||"") !== observaciones) data.obs_ok = false; Object.assign(t, data); }
+  else list.push(t = { id: uid(), ...data, obs_ok: false });
   resetForm(); refresh(); await saveTask(openDay, t);
   toast(wasEdit ? "Cambios guardados" : "Tarea agregada");
 };
