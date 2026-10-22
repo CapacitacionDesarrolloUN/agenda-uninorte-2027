@@ -67,6 +67,20 @@ button{cursor:pointer}
 .brand .year{margin-top:14px;display:flex;align-items:baseline;gap:8px}
 .brand .year b{font-family:var(--f-display);font-size:40px;line-height:1;color:var(--roble)}
 .brand .year span{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.brand .year{position:relative}
+.yearbtn{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:0;color:inherit;cursor:pointer;border-radius:8px}
+.yearbtn b{font-family:var(--f-display);font-size:40px;line-height:1;color:var(--roble)}
+.yearbtn::after{content:"";width:9px;height:9px;border-right:3px solid var(--roble);border-bottom:3px solid var(--roble);transform:translateY(-6px) rotate(45deg);margin-left:4px}
+.yearbtn:hover b,.yearbtn[aria-expanded="true"] b{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:5px}
+.yearbtn:focus-visible{outline:2px solid var(--roble);outline-offset:4px}
+.yearmenu{position:absolute;top:calc(100% + 8px);left:0;z-index:60;min-width:170px;background:var(--surface);color:var(--fg);border-radius:12px;padding:6px;
+  box-shadow:0 18px 40px rgba(0,0,0,.28);list-style:none;margin:0}
+.yearmenu button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;background:none;border:0;border-radius:8px;padding:9px 12px;cursor:pointer;
+  font-family:var(--f-display);font-size:22px;color:var(--fg);text-align:left}
+.yearmenu button span{font-family:inherit;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.yearmenu button:hover{background:var(--bg)}
+.yearmenu button[aria-checked="true"]{background:var(--rojo);color:#fff}
+.yearmenu button[aria-checked="true"] span{color:#fff}
 .months{list-style:none;margin:0;padding:10px 0;flex:1;overflow-y:auto}
 .months button{width:100%;display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:6px;border:0;background:none;
   padding:9px 22px;text-align:left;color:var(--rail-dim);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px;position:relative}
@@ -124,6 +138,7 @@ h1 em{font-style:normal;color:var(--rojo)}
 .today-tag{font-size:10px;font-weight:800;letter-spacing:.12em;background:var(--roble);color:var(--negro);padding:2px 6px;border-radius:4px}
 .special{margin:10px 10px 0;padding:6px 8px;border-radius:8px;font-size:11.5px;font-weight:700;line-height:1.25;background:var(--rojo);color:#fff}
 .special.carnaval{background:var(--roble);color:var(--negro)}
+.special.uni{background:#fff;color:var(--fg);border:1px solid var(--line);font-weight:600}
 .special.holiday .num{color:var(--rojo)}
 .day.holiday .num{color:var(--rojo)}
 .tasks{list-style:none;margin:0;padding:10px;display:grid;grid-template-columns:minmax(0,1fr);gap:6px;flex:1;align-content:start}
@@ -184,7 +199,11 @@ h1 em{font-style:normal;color:var(--rojo)}
 .board-h .daynav{display:flex;gap:6px;margin-top:12px}
 .board-h .daynav button{background:rgba(255,255,255,.14);border:0;color:#fff;border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700}
 .board-h .daynav button:hover{background:rgba(255,255,255,.26)}
-.board-special{margin:14px 22px 0;padding:10px 12px;border-radius:10px;background:var(--roble);color:var(--negro);font-weight:700;font-size:13.5px}
+.board-special{margin:14px 22px 0;display:grid;gap:6px}
+.board-special div{padding:10px 12px;border-radius:10px;background:var(--roble);color:var(--negro);font-weight:700;font-size:13.5px}
+.board-special div.fest{background:var(--rojo);color:#fff}
+.board-special div.uni{background:var(--surface);border:1px solid var(--line);font-weight:600}
+.board-special div.uni small{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:2px}
 .board-body{flex:1;overflow-y:auto;padding:16px 22px 24px;display:grid;gap:18px;align-content:start}
 .cols{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .col-count{border-radius:10px;padding:8px 10px;font-size:11.5px;font-weight:700;display:grid;gap:2px}
@@ -254,7 +273,8 @@ input:focus,select:focus{border-color:var(--rojo);outline:none;box-shadow:0 0 0 
   .app{grid-template-columns:1fr}
   .rail{position:sticky;top:0;height:auto;z-index:10;padding-top:env(safe-area-inset-top,0px)}
   .brand{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-  .brand .year{margin:0} .brand .year b{font-size:26px}
+  .brand .year{margin:0} .brand .year b,.yearbtn b{font-size:26px}
+  .yearmenu{position:fixed;top:calc(env(safe-area-inset-top,0px) + 58px);left:auto;right:max(16px,env(safe-area-inset-right,0px))}
   .rail .logo{width:150px}
   .unit{display:none}
   .months{display:flex;overflow-x:auto;padding:0 8px 10px;gap:4px;scrollbar-width:none}
@@ -280,7 +300,8 @@ input:focus,select:focus{border-color:var(--rojo);outline:none;box-shadow:0 0 0 
     <div class="brand">
       <span class="logo" role="img" aria-label="Universidad del Norte"></span>
       <div class="unit"><b>Gestión Humana</b>Capacitación y Desarrollo</div>
-      <div class="year"><b>2027</b><span>Agenda</span></div>
+      <div class="year"><button type="button" class="yearbtn" id="yearBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Cambiar de año"><b id="yearNum">2027</b></button><span>Agenda</span>
+        <ul class="yearmenu" id="yearMenu" role="menu" hidden></ul></div>
     </div>
     <ul class="months" id="months"></ul>
     <div class="rail-foot">
@@ -388,14 +409,40 @@ input:focus,select:focus{border-color:var(--rojo);outline:none;box-shadow:0 0 0 
 <script src="config.js"></script>
 <script>
 (() => {
-const YEAR = 2027;
+const YEARS = [2026, 2027, 2028];
+let YEAR = 2027;
 const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const DIAS = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
 const DIAS_C = ["LU","MA","MI","JU","VI","SÁ","DO"];
 const ESTADOS = ["Pendiente","Programado","Realizado","Cancelado"];
 
-// Días especiales de la hoja "DÍAS ESP" del Excel
+// Festivos de Colombia y Carnaval de Barranquilla, 2026–2028
 const ESPECIALES = {
+  "2026-01-01":["Festivo","Año Nuevo"], "2026-01-12":["Festivo","Día de los Reyes Magos"],
+  "2026-02-14":["Carnaval","Batalla de Flores"], "2026-02-15":["Carnaval","Gran Parada de Tradición"],
+  "2026-02-16":["Carnaval","Gran Parada de Comparsas"], "2026-02-17":["Carnaval","Muerte de Joselito"],
+  "2026-03-23":["Festivo","Día de San José"], "2026-04-02":["Festivo","Jueves Santo"], "2026-04-03":["Festivo","Viernes Santo"],
+  "2026-05-01":["Festivo","Día del Trabajo"], "2026-05-18":["Festivo","Día de la Ascensión"], "2026-06-08":["Festivo","Corpus Christi"],
+  "2026-06-15":["Festivo","Sagrado Corazón"], "2026-06-29":["Festivo","San Pedro y San Pablo"],
+  "2026-07-13":["Festivo","Virgen de Chiquinquirá"], "2026-07-20":["Festivo","Día de la Independencia"],
+  "2026-08-07":["Festivo","Batalla de Boyacá"], "2026-08-17":["Festivo","La Asunción de la Virgen"],
+  "2026-10-12":["Festivo","Día de la Raza"], "2026-11-02":["Festivo","Todos los Santos"],
+  "2026-11-16":["Festivo","Independencia de Cartagena"], "2026-12-08":["Festivo","Inmaculada Concepción"],
+  "2026-12-25":["Festivo","Navidad"],
+
+  "2028-01-01":["Festivo","Año Nuevo"], "2028-01-10":["Festivo","Día de los Reyes Magos"],
+  "2028-02-26":["Carnaval","Batalla de Flores"], "2028-02-27":["Carnaval","Gran Parada de Tradición"],
+  "2028-02-28":["Carnaval","Gran Parada de Comparsas"], "2028-02-29":["Carnaval","Muerte de Joselito"],
+  "2028-03-20":["Festivo","Día de San José"], "2028-04-13":["Festivo","Jueves Santo"], "2028-04-14":["Festivo","Viernes Santo"],
+  "2028-05-01":["Festivo","Día del Trabajo"], "2028-05-29":["Festivo","Día de la Ascensión"], "2028-06-19":["Festivo","Corpus Christi"],
+  "2028-06-26":["Festivo","Sagrado Corazón"], "2028-07-03":["Festivo","San Pedro y San Pablo"],
+  "2028-07-10":["Festivo","Virgen de Chiquinquirá"], "2028-07-20":["Festivo","Día de la Independencia"],
+  "2028-08-07":["Festivo","Batalla de Boyacá"], "2028-08-21":["Festivo","La Asunción de la Virgen"],
+  "2028-10-16":["Festivo","Día de la Raza"], "2028-11-06":["Festivo","Todos los Santos"],
+  "2028-11-13":["Festivo","Independencia de Cartagena"], "2028-12-08":["Festivo","Inmaculada Concepción"],
+  "2028-12-25":["Festivo","Navidad"],
+
+
   "2027-01-01":["Festivo","Año Nuevo"], "2027-01-11":["Festivo","Día de los Reyes Magos"],
   "2027-02-06":["Carnaval","Batalla de Flores"], "2027-02-07":["Carnaval","Gran Parada de Tradición"],
   "2027-02-08":["Carnaval","Gran Parada de Comparsas"], "2027-02-09":["Carnaval","Muerte de Joselito"],
@@ -409,6 +456,9 @@ const ESPECIALES = {
   "2027-12-25":["Festivo","Navidad"]
 };
 
+// Eventos especiales de la Universidad (casillas en blanco del Calendario 2026)
+const EVENTOS = {"2026-01-16": ["Inicio de clases programas PG"],"2026-01-19": ["Inicio de clases programas PR 20 semanas y X semestre de Medicina"],"2026-01-21": ["Jornada de Bienvenida"],"2026-01-22": ["Jornada de Bienvenida","Un Norte para los 60 años de Uninorte"],"2026-01-23": ["Ceremonia de grado Division Ciencias de la Salud I Semestre","Ceremonia de Becas Pregrado 2026-10"],"2026-01-26": ["Cierre del proceso de ubicación de prácticas 2026-10 - Coordinación de Prácticas adscritas a OE","Inicio de clases programas PR 16"],"2026-01-28": ["¡Cumplimos 60 años!"],"2026-01-30": ["Polleritas y Sombreritos","Grado sin ceremonia"],"2026-02-02": ["HAY Festival Uninorte","Inicio de clases recreodeportivas y culturales colaboradores y familiares"],"2026-02-04": ["Jornada de Bienestar Organizacional","Feria de Liderazgo y Voluntariado Universitario"],"2026-02-12": ["60 líderes en los 60 de la líder"],"2026-02-19": ["Inicia proceso de ubicación prácticas 2026-30 - Coordinación de Prácticas adscritas a OE","Ceremonia de la luz - Enfermería"],"2026-02-20": ["Ceremonia de Becas posgrado 202610"],"2026-02-23": ["Ceremonia de Imposición de Batas Blancas y Bendición de Manos - Odontología"],"2026-03-13": ["Ceremonia de graduación y reconocimientos a la excelencia académica - I semestre"],"2026-03-19": ["Jornada de Planeación 2026"],"2026-03-27": ["Jornada Inaugural Cátedra Barranquilla"],"2026-03-28": ["Jornada Inaugural Cátedra Barranquilla"],"2026-03-30": ["Semana santa"],"2026-03-31": ["Semana santa"],"2026-04-01": ["Semana santa"],"2026-04-04": ["Semana santa"],"2026-04-05": ["Semana santa"],"2026-04-15": ["Cátedra Cepeda Samudio: 100 años"],"2026-04-16": ["Cátedra Cepeda Samudio: 100 años"],"2026-04-18": ["Día del Niño"],"2026-04-24": ["Grado sin ceremonia","Fecha límite de solicitudes de prácticas 2026-30 por Aurora- Coordinación de Prácticas adscritas a OE","Día de la Secretaria"],"2026-04-25": ["Summit de Bienestar Integral – Open Day"],"2026-04-26": ["Summit de Bienestar Integral – Carrera 6K"],"2026-05-25": ["Grado sin ceremonia","Ceremonia de batas blancas Medicina"],"2026-06-14": ["Finalizan clases programas PG","Finalizan clases programas PR 20 semanas"],"2026-06-17": ["Inician clases intersemestrales"],"2026-06-26": ["Grado sin ceremonia"],"2026-07-10": ["Finalizan clases intersemestrales","Inicio de clases programas PG"],"2026-07-22": ["Jornada de Bienvenida"],"2026-07-23": ["Jornada de Bienvenida"],"2026-07-24": ["Ceremonia de Becas Pregrado 2026-30","Ceremonia de grado Division Ciencias de la Salud II Semestre"],"2026-07-25": ["Día de la Familia y Diversidad"],"2026-07-27": ["Inicio de clases programas PR 16"],"2026-07-31": ["Grado sin ceremonia"],"2026-08-05": ["Feria de Liderazgo y Voluntariado Universitario","Inicia Cuarta Cátedra Afrodescendientes y Memoria"],"2026-08-06": ["Finaliza Cuarta Cátedra Afrodescendientes y Memoria"],"2026-08-10": ["Inicia proceso de ubicación para estudiantes en práctica 2027-10 - Coordinación de Prácticas adscritas a OE"],"2026-08-13": ["Ceremonia de la luz - Enfermería"],"2026-08-21": ["Ceremonia de Becas Posgrado 2026-30"],"2026-08-24": ["Ceremonia de Imposición de Batas Blancas y Bendición de Manos - Odontología"],"2026-08-27": ["Cierre del proceso de ubicación de prácticas 2026-30 - Coordinación de Prácticas adscritas a OE"],"2026-08-31": ["Inicia Desafío 4U"],"2026-09-01": ["Inicia Semana por los Objetivos de Desarrollo Sostenible 2026"],"2026-09-04": ["Finaliza Semana por los Objetivos de Desarrollo Sostenible 2026"],"2026-09-17": ["Celebración Amor y Amistad"],"2026-09-25": ["Ceremonia de graduación y reconocimientos a la excelencia académica - II semestre"],"2026-09-28": ["Inicia Cátedra Europa - Austria"],"2026-10-02": ["Finaliza Desafío 4U","Inicia aplicación Evaluación de Desempeño por Competencias Evacom y Evadoc","Finaliza Cátedra Europa - Austria"],"2026-10-05": ["Semana de receso"],"2026-10-06": ["Semana de receso"],"2026-10-07": ["Semana de receso"],"2026-10-08": ["Semana de receso"],"2026-10-09": ["Semana de receso"],"2026-10-10": ["Semana de receso"],"2026-10-11": ["Semana de receso"],"2026-10-23": ["Fecha límite de solicitudes de prácticas 2027-10 por Aurora- Coordinación de Prácticas adscritas a OE","Grado sin ceremonia"],"2026-10-30": ["Tarde divertida de dulces"],"2026-11-03": ["ENVIO DE FORMS PARA PLAN DE FORMACION 2026 PARA LIDERES","ENVIO DE FORMS PARA PLAN DE FORMACION 2026 PARA SST"],"2026-11-20": ["Ceremonia de batas blancas Medicina"],"2026-11-22": ["Finalizan clases programas PR 16 semanas"],"2026-11-24": ["Evento fin de año gerentes RRHH"],"2026-11-30": ["Finalización clases recreodeportivas y culturales colaboradores y familiares"],"2026-12-03": ["Ceremonia de reconocimientos a la excelencia en la gestión y en el servicio operativo"],"2026-12-04": ["Navidad Social","Rifa de Navidad","Grado sin ceremonia"],"2026-12-06": ["Finalizan clases programas PR 20 semanas"],"2026-12-11": ["Celebración de Navidad"],"2026-12-12": ["Finalizan clases programas PG"],"2026-12-15": ["Novena Familiar"]};
+
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2,"0");
 const key = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
@@ -418,9 +468,10 @@ const monday = d => addDays(d, -((d.getDay()+6)%7));
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
 
-const FIRST = monday(new Date(YEAR,0,1)), LAST = monday(new Date(YEAR,11,31));
 const realToday = new Date();
 const todayKey = key(realToday);
+let FIRST, LAST;
+const setBounds = () => { FIRST = monday(new Date(YEAR,0,1)); LAST = monday(new Date(YEAR,11,31)); };
 
 // ---------- Almacenamiento: tabla "tareas" en Supabase, compartida y en vivo; copia en el navegador como respaldo ----------
 const LS_KEY = "uninorte-agenda-2027";
@@ -476,6 +527,13 @@ async function loadAll(){
   document.addEventListener("visibilitychange", () => { if (!document.hidden) loadAll(); });
 })();
 
+// ---------- Año ----------
+const YEAR_KEY = "uninorte-agenda-anio";
+YEAR = +lsGet(YEAR_KEY) || realToday.getFullYear();
+if (!YEARS.includes(YEAR)) YEAR = 2027;
+setBounds();
+const yearOf = d => YEARS.includes(d.getFullYear()) ? d.getFullYear() : null;
+
 // ---------- Estado de la vista ----------
 const clampWeek = d => d < FIRST ? FIRST : d > LAST ? LAST : d;
 let weekStart = clampWeek(monday(realToday.getFullYear() === YEAR ? realToday : new Date(YEAR,0,1)));
@@ -485,6 +543,25 @@ let openDay = null, editingId = null;
 
 const sorted = list => [...list].sort((a,b) => (a.inicio||"99").localeCompare(b.inicio||"99"));
 const countMonth = m => Object.entries(tasks).reduce((n,[k,l]) => n + (parse(k).getMonth()===m && parse(k).getFullYear()===YEAR ? l.length : 0), 0);
+
+function setYear(y, goTo){
+  YEAR = y; lsSet(YEAR_KEY, String(y)); setBounds();
+  if (openDay) closeBoard();
+  const d = goTo || (realToday.getFullYear()===y ? realToday : new Date(y,0,1));
+  weekStart = clampWeek(monday(d)); goWeek(d);
+}
+function renderYear(){
+  $("yearNum").textContent = YEAR;
+  $("yearMenu").innerHTML = YEARS.map(y => `<li role="none"><button type="button" role="menuitemradio" aria-checked="${y===YEAR}" data-y="${y}">${y}${y===realToday.getFullYear()?"<span>Actual</span>":""}</button></li>`).join("");
+}
+function toggleYearMenu(open){
+  $("yearMenu").hidden = !open; $("yearBtn").setAttribute("aria-expanded", open);
+  if (open) $("yearMenu").querySelector('[aria-checked="true"]')?.focus();
+}
+$("yearBtn").onclick = e => { e.stopPropagation(); toggleYearMenu($("yearMenu").hidden); };
+$("yearMenu").onclick = e => { const b = e.target.closest("button[data-y]"); if (!b) return; toggleYearMenu(false); if (+b.dataset.y!==YEAR) { setYear(+b.dataset.y); toast(`Agenda ${YEAR}`); } };
+document.addEventListener("click", e => { if (!$("yearMenu").hidden && !e.target.closest(".year")) toggleYearMenu(false); });
+document.addEventListener("keydown", e => { if (e.key==="Escape" && !$("yearMenu").hidden) { toggleYearMenu(false); $("yearBtn").focus(); } });
 
 function renderMonths(){
   $("months").innerHTML = MESES.map((m,i) => {
@@ -522,6 +599,7 @@ function renderWeek(){
     return `<div role="button" tabindex="${d.getFullYear()!==YEAR?-1:0}" class="${cls}" data-k="${k}" aria-label="${DIAS[i]} ${d.getDate()} de ${MESES[d.getMonth()]}">
       <div class="day-h"><div><div class="dow">${DIAS[i].slice(0,3)}</div><div class="num">${d.getDate()}</div></div>${k===todayKey?'<span class="today-tag">HOY</span>':""}</div>
       ${sp?`<div class="special ${sp[0]==="Carnaval"?"carnaval":""}">${sp[0]==="Carnaval"?"Carnaval · ":""}${esc(sp[1])}</div>`:""}
+      ${(EVENTOS[k]||[]).map(n => `<div class="special uni">${esc(n)}</div>`).join("")}
       <ul class="tasks">${shown.map(t => `<li class="${t.estado}">${t.inicio?`<time>${t.inicio}</time>`:""}<b>${esc(t.nombre)}</b></li>`).join("")}</ul>
       ${list.length>4?`<div class="more">+${list.length-4} más</div>`:""}
       <div class="add-hint">${list.length?"Ver tablero":"+ Agregar"}</div>
@@ -541,7 +619,11 @@ function goWeek(d){
 }
 $("prevW").onclick = () => goWeek(addDays(weekStart,-7));
 $("nextW").onclick = () => goWeek(addDays(weekStart,7));
-$("todayBtn").onclick = () => { if (realToday.getFullYear()!==YEAR) { toast("La agenda es de 2027. Te llevo a la primera semana."); goWeek(new Date(YEAR,0,1)); } else goWeek(realToday); };
+$("todayBtn").onclick = () => {
+  if (realToday.getFullYear()===YEAR) goWeek(realToday);
+  else if (yearOf(realToday)) { setYear(realToday.getFullYear(), realToday); toast(`Agenda ${YEAR}`); }
+  else { toast(`Hoy no está en la agenda ${YEAR}. Te llevo a la primera semana.`); goWeek(new Date(YEAR,0,1)); }
+};
 $("newBtn").onclick = () => {
   const k = realToday.getFullYear()===YEAR && monday(realToday).getTime()===weekStart.getTime() ? todayKey : key(weekStart.getFullYear()<YEAR ? new Date(YEAR,0,1) : weekStart);
   openBoard(k); setTimeout(() => $("fNombre").focus(), 260);
@@ -566,8 +648,9 @@ $("miniNext").onclick = () => { if (miniMonth<11) { miniMonth++; renderMini(); }
 
 function renderUpcoming(){
   const from = realToday.getFullYear()===YEAR ? todayKey : key(weekStart);
-  const next = Object.keys(ESPECIALES).filter(k => k >= from).sort().slice(0,5);
-  const list = next.length ? next : Object.keys(ESPECIALES).sort().slice(-3);
+  const delAnio = Object.keys(ESPECIALES).filter(k => k.startsWith(YEAR+"-")).sort();
+  const next = delAnio.filter(k => k >= from).slice(0,5);
+  const list = next.length ? next : delAnio.slice(-3);
   $("upcoming").innerHTML = list.map(k => { const d = parse(k); return `<li><span>${pad(d.getDate())} ${MESES[d.getMonth()].slice(0,3).toUpperCase()}</span><div>${esc(ESPECIALES[k][1])}</div></li>`; }).join("");
 }
 
@@ -598,7 +681,10 @@ function renderBoard(){
   $("bTitle").textContent = `${DIAS[(d.getDay()+6)%7]} ${d.getDate()}`;
   $("bSub").textContent = `${MESES[d.getMonth()]} de ${YEAR}${openDay===todayKey?" · Hoy":""}`;
   $("bPrev").disabled = openDay===`${YEAR}-01-01`; $("bNext").disabled = openDay===`${YEAR}-12-31`;
-  $("bSpecial").hidden = !sp; if (sp) $("bSpecial").textContent = `${sp[0]} · ${sp[1]}`;
+  const evs = EVENTOS[openDay] || [];
+  $("bSpecial").hidden = !sp && !evs.length;
+  $("bSpecial").innerHTML = (sp?`<div class="${sp[0]==="Festivo"?"fest":""}">${sp[0]} · ${esc(sp[1])}</div>`:"")
+    + evs.map(n => `<div class="uni"><small>Evento Uninorte</small>${esc(n)}</div>`).join("");
   $("bCounts").innerHTML = ESTADOS.map(s => `<div class="col-count st-${s}"><b>${list.filter(t=>t.estado===s).length}</b>${s}</div>`).join("");
   $("bList").innerHTML = list.length ? list.map(t => `
     <article class="item ${t.estado}" data-id="${t.id}">
@@ -656,15 +742,19 @@ $("form").onsubmit = async e => {
   const ubicacion = $("fUbi").value.trim(), link = $("fLink").value.trim();
   const falta = [];
   const need = (ok, id, txt) => { $(id).classList.toggle("miss", !ok); if (!ok) falta.push(txt); };
+  // En 2026 (año ya en curso, cargado del Excel) solo el nombre es obligatorio
+  const flexible = YEAR===2026;
   need(nombre, "fNombre", "el nombre");
-  need(inicio, "fIni", "la hora de inicio");
-  need(fin, "fFin", "la hora de fin");
-  need(modalidad, "fMod", "la modalidad");
-  if (modalidad && modalidad!=="Virtual") need(ubicacion, "fUbi", "la ubicación");
-  if (modalidad && modalidad!=="Presencial") need(link, "fLink", "el link de la sesión");
+  if (!flexible) {
+    need(inicio, "fIni", "la hora de inicio");
+    need(fin, "fFin", "la hora de fin");
+    need(modalidad, "fMod", "la modalidad");
+    if (modalidad && modalidad!=="Virtual") need(ubicacion, "fUbi", "la ubicación");
+    if (modalidad && modalidad!=="Presencial") need(link, "fLink", "el link de la sesión");
+  }
   let err = falta.length ? `Te falta ${falta.length>1 ? falta.slice(0,-1).join(", ")+" y "+falta.at(-1) : falta[0]}.` : "";
-  if (!err && fin <= inicio) { err = "La hora de fin debe ser después de la de inicio."; $("fFin").classList.add("miss"); }
-  if (!err && modalidad!=="Presencial" && !/^https?:\/\//i.test(link)) { err = "El link debe empezar por https://"; $("fLink").classList.add("miss"); }
+  if (!err && inicio && fin && fin <= inicio) { err = "La hora de fin debe ser después de la de inicio."; $("fFin").classList.add("miss"); }
+  if (!err && link && modalidad!=="Presencial" && !/^https?:\/\//i.test(link)) { err = "El link debe empezar por https://"; $("fLink").classList.add("miss"); }
   $("fErr").hidden = !err; $("fErr").textContent = err; if (err) return;
   const data = { nombre, inicio, fin, modalidad, ubicacion: modalidad==="Virtual" ? "" : ubicacion, link: modalidad==="Presencial" ? "" : link, estado: $("fEstado").value };
   const list = tasks[openDay] || (tasks[openDay] = []);
@@ -678,7 +768,7 @@ $("form").onsubmit = async e => {
 let tt; function toast(m){ const t = $("toast"); t.textContent = m; t.classList.add("on"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("on"), 2200); }
 
 function refresh(){ renderBoard(); renderWeek(); renderMini(); renderMonths(); }
-function renderAll(){ renderMonths(); renderWeek(); renderMini(); renderUpcoming(); renderBoard(); }
+function renderAll(){ renderYear(); renderMonths(); renderWeek(); renderMini(); renderUpcoming(); renderBoard(); }
 renderAll();
 })();
 </script>

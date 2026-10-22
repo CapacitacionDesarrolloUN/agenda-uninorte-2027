@@ -1,13 +1,13 @@
--- Agenda Uninorte 2027: pega todo esto en Supabase → SQL Editor → Run.
+-- Agenda Uninorte 2026–2028: pega todo esto en Supabase → SQL Editor → Run.
 
 create table if not exists public.tareas (
   id          text primary key,
-  fecha       date not null check (fecha between '2027-01-01' and '2027-12-31'),
-  nombre      text not null check (char_length(nombre) between 1 and 120),
+  fecha       date not null check (fecha between '2026-01-01' and '2028-12-31'),
+  nombre      text not null check (char_length(nombre) between 1 and 300),
   inicio      text not null default '',
   fin         text not null default '',
   modalidad   text not null default '' check (modalidad in ('', 'Presencial', 'Virtual', 'Híbrido')),
-  ubicacion   text not null default '' check (char_length(ubicacion) <= 80),
+  ubicacion   text not null default '' check (char_length(ubicacion) <= 200),
   link        text not null default '' check (char_length(link) <= 500),
   estado      text not null default 'Pendiente' check (estado in ('Pendiente', 'Programado', 'Realizado', 'Cancelado')),
   actualizado timestamptz not null default now()
