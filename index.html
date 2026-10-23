@@ -607,7 +607,7 @@ h1.swap,.range.swap{animation:rise .45s var(--ease) backwards}
       <label>Observaciones <span class="opt">(opcional)</span><textarea id="fObs" maxlength="1000" rows="3" placeholder="Algo pendiente o para tener en cuenta en esta tarea"></textarea></label>
       <div class="err" id="fErr" hidden></div>
       <div class="btns">
-        <button class="btn" type="button" id="fCursos" hidden title="Abre Cursos abiertos con esta tarea lista para el diseñador">Añadir a cursos abiertos ↗</button>
+        <button class="btn" type="button" id="fCursos" hidden title="Crea una tarea para el diseñador en Cursos abiertos con estos datos">Añadir a cursos abiertos</button>
         <button class="btn" type="button" id="fCancel" hidden>Cancelar edición</button>
         <button class="btn primary" type="submit" id="fSave">Agregar tarea</button>
       </div>
@@ -1044,14 +1044,15 @@ async function copyText(txt, btn){
   catch { const i = $("fLink"); if (btn.id==="fCopy") { i.select(); toast("Selecciona y copia con Ctrl+C"); } else { window.getSelection().selectAllChildren(btn.previousElementSibling); toast("Link seleccionado. Cópialo con Ctrl+C"); } }
 }
 $("fCopy").onclick = e => copyText($("fLink").value.trim(), e.currentTarget);
-// Abre la app de Cursos abiertos (vista de administrador) con una tarea nueva para el diseñador,
-// prellenada con lo que hay en el formulario. Los datos viajan en el #, que no llega a ningún servidor.
-$("fCursos").onclick = () => {
-  const url = window.AGENDA_CONFIG?.cursosUrl;
+// Crea en la app de Cursos abiertos una tarea para el diseñador con lo que hay en el formulario,
+// sin salir de la agenda. Si ya se había enviado, la actualiza (mientras el diseñador no la termine).
+$("fCursos").onclick = async () => {
+  const url = window.AGENDA_CONFIG?.cursosUrl, btn = $("fCursos");
   if (!url) { toast("Falta la dirección de Cursos abiertos en config.js."); return; }
   const modalidad = $("fMod").value, ubicacion = $("fUbi").value.trim(), link = $("fLink").value.trim();
   const lugar = [modalidad && `Modalidad: ${modalidad}`, ubicacion && modalidad!=="Virtual" && `Ubicación: ${ubicacion}`].filter(Boolean).join(" · ");
   const datos = {
+    agenda_id: editingId,
     nombre: $("fNombre").value.trim(),
     fecha: openDay,
     hora_inicio: readHora("fIni") || "",
@@ -1060,7 +1061,17 @@ $("fCursos").onclick = () => {
     observaciones: [lugar, $("fObs").value.trim()].filter(Boolean).join("\n").slice(0, 1000)
   };
   if (!datos.nombre) { toast("Escribe el nombre de la tarea primero."); $("fNombre").focus(); return; }
-  window.open(`${url.replace(/\/+$/, "")}/#agenda?${new URLSearchParams(datos)}`, "_blank", "noopener");
+  btn.disabled = true; btn.textContent = "Enviando…";
+  try {
+    const r = await fetch(`${url.replace(/\/+$/, "")}/api/desde-agenda`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datos) });
+    const res = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(res.error || "Cursos abiertos no respondió.");
+    toast(res.actualizada ? "Tarea actualizada en cursos abiertos" : "¡Listo! Tarea enviada a cursos abiertos ✨");
+  } catch (e) {
+    toast(e instanceof TypeError ? "No se pudo conectar con cursos abiertos. Revisa tu internet." : e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = "Añadir a cursos abiertos";
+  }
 };
 $("form").onsubmit = async e => {
   e.preventDefault();
