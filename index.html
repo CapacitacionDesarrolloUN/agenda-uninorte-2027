@@ -305,6 +305,87 @@ label .opt{font-weight:600;opacity:.75;letter-spacing:0}
 .sync i{width:8px;height:8px;border-radius:50%;background:#9AA0A6}
 .sync.ok i{background:#1E9E5A}.sync.off i{background:var(--rojo)}.sync.wait i{background:var(--roble)}
 
+
+/* ================= Rediseño: más cálido y amigable ================= */
+:root{--r-card:20px;--soft-shadow:0 1px 2px rgba(80,30,30,.06),0 8px 24px rgba(80,30,30,.07);--soft-shadow-hover:0 2px 4px rgba(80,30,30,.08),0 16px 36px rgba(80,30,30,.13)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--soft-shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);--soft-shadow-hover:0 2px 4px rgba(0,0,0,.5),0 16px 36px rgba(0,0,0,.5)}}
+body{background:
+  radial-gradient(1200px 500px at 85% -10%,color-mix(in srgb,var(--roble) 16%,transparent),transparent 60%),
+  radial-gradient(900px 500px at 30% 110%,color-mix(in srgb,var(--rojo) 9%,transparent),transparent 60%),
+  var(--bg);background-attachment:fixed}
+:focus-visible{outline:3px solid var(--roble);outline-offset:2px;border-radius:8px}
+
+/* Riel */
+.rail{background:linear-gradient(165deg,color-mix(in srgb,var(--rojo) 92%,#fff) 0%,var(--rojo) 40%,var(--rojo-hondo) 100%)}
+.rail::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.08;
+  background-image:radial-gradient(#fff 1px,transparent 1.2px);background-size:16px 16px}
+.months{padding:12px 10px}
+.months button{border-radius:12px;padding:10px 14px;margin:2px 0}
+.months button:hover{padding-left:20px;background:rgba(255,255,255,.12)}
+.months button[aria-current="true"]{box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.months button[aria-current="true"]::before{display:none}
+.rail-foot{background:rgba(0,0,0,.10)}
+
+/* Encabezado */
+.greet{margin:10px 0 0;font-size:15.5px;font-weight:600;color:var(--fg)}
+.greet .wave{display:inline-block;transform-origin:70% 70%;animation:wave 2.4s ease-in-out 1s 2}
+@keyframes wave{0%,60%,100%{transform:none}10%,30%{transform:rotate(14deg)}20%,40%{transform:rotate(-8deg)}}
+h1{font-size:clamp(32px,4.4vw,52px);margin-top:4px}
+.range{font-size:14px}
+.btn{border-radius:14px;box-shadow:var(--soft-shadow);border-color:transparent}
+.btn.icon{border-radius:14px}
+.btn.primary{background:linear-gradient(135deg,var(--rojo),var(--rojo-hondo));border:0}
+.btn.primary:hover{background:linear-gradient(135deg,var(--rojo-hondo),var(--rojo-hondo))}
+
+/* Resumen de la semana */
+.weekstats{align-items:center;gap:8px 10px}
+.progress{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:999px;padding:6px 14px 6px 8px;box-shadow:var(--soft-shadow);font-size:12.5px;font-weight:700}
+.progress .bar{width:110px;height:8px;border-radius:99px;background:color-mix(in srgb,var(--muted) 18%,transparent);overflow:hidden;display:flex}
+.progress .bar span{height:100%;transition:width .8s var(--ease)}
+.chip{box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 12%,transparent)}
+
+/* Días */
+.week{gap:12px}
+.day{border:0;border-radius:var(--r-card);box-shadow:var(--soft-shadow)}
+.day:hover{transform:translateY(-4px);box-shadow:var(--soft-shadow-hover);border-color:transparent}
+.day-h{border-bottom:0;padding:14px 14px 6px}
+.day-h .num{font-size:32px}
+.day.weekend{background:color-mix(in srgb,var(--surface) 80%,var(--bg))}
+.day.today{box-shadow:0 0 0 3px var(--roble),var(--soft-shadow-hover)}
+.day.today .day-h{background:linear-gradient(180deg,var(--hoy-bg),transparent)}
+.today-tag{border-radius:999px;padding:3px 7px;letter-spacing:.06em;flex:none}
+.special{border-radius:10px;margin:6px 10px 0;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.special.uni{box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.tasks{gap:8px;padding:8px}
+.tasks li{border-left:0;border-radius:12px;padding:7px 7px 7px 11px;position:relative;font-weight:500}
+.tasks li::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:4px;border-radius:0 4px 4px 0;background:currentColor;opacity:.55}
+.tasks li.Pendiente::before{background:var(--pend);opacity:1}.tasks li.Programado::before{background:var(--prog);opacity:1}
+.tasks li.Realizado::before{background:var(--real);opacity:1}.tasks li.Revisado::before{background:var(--rev);opacity:1}.tasks li.Cancelado::before{background:var(--canc);opacity:1}
+.tasks li b{font-weight:650;font-size:12.5px;line-height:1.3}
+.tasks li time{display:block;margin-bottom:2px}
+.free{margin:4px 14px 0;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.add-hint{border-radius:12px;opacity:.75;transition:opacity .2s,border-color .2s,color .2s,background-color .2s}
+.day:hover .add-hint{opacity:1;background:color-mix(in srgb,var(--rojo) 6%,transparent)}
+
+/* Panel derecho */
+.mini{border:0;border-radius:var(--r-card);box-shadow:var(--soft-shadow)}
+.upcoming{border-radius:var(--r-card);background:linear-gradient(160deg,#2a2424,#161212);box-shadow:var(--soft-shadow)}
+.upcoming li{align-items:center}
+.upcoming li em{font-style:normal;margin-right:6px}
+
+/* Tablero */
+.board{border-radius:24px 0 0 24px;overflow:hidden}
+.board-h{background:linear-gradient(150deg,color-mix(in srgb,var(--rojo) 88%,#fff),var(--rojo) 45%,var(--rojo-hondo))}
+.col-count{border-radius:14px}
+.item{border:0;border-radius:16px;box-shadow:var(--soft-shadow);border-left:6px solid}
+.form{border:0;border-radius:var(--r-card);box-shadow:var(--soft-shadow)}
+.seg button{padding:5px 11px;min-height:30px}
+.empty{border-radius:var(--r-card);background:var(--surface);border:0;box-shadow:var(--soft-shadow);padding:30px 18px;font-size:14.5px}
+.empty .big{display:block;font-size:34px;margin-bottom:6px;animation:bob 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:none}50%{transform:translateY(-5px)}}
+.toast{border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+@media (prefers-reduced-motion:reduce){.greet .wave,.empty .big{animation:none}}
+
 /* ---------- Responsive ---------- */
 @media (max-width:1180px){
   .layout,.layout.side-off{grid-template-columns:1fr;column-gap:0}
@@ -430,6 +511,7 @@ h1.swap,.range.swap{animation:rise .45s var(--ease) backwards}
     <header class="top">
       <div>
         <div class="eyebrow"><span class="logo" role="img" aria-label="Universidad del Norte"></span><span class="sep"></span><span>Gestión Humana · Capacitación y Desarrollo</span></div>
+        <p class="greet" id="greet"></p>
         <h1 id="title">Enero <em>2027</em></h1>
         <div class="range" id="range"></div>
         <div class="sync wait" id="sync" role="status"><i></i><span>Conectando…</span></div>
@@ -733,9 +815,14 @@ function renderWeek(){
   const counts = Object.fromEntries(ESTADOS.map(s => [s,0]));
   days.forEach(d => (tasks[key(d)]||[]).forEach(t => counts[t.estado]++));
   const total = Object.values(counts).reduce((a,b)=>a+b,0);
+  const hechas = counts.Realizado + counts.Revisado, activas = total - counts.Cancelado;
+  const COLOR = { Pendiente:"var(--pend)", Programado:"var(--prog)", Realizado:"var(--real)", Revisado:"var(--rev)", Cancelado:"var(--canc)" };
   $("weekstats").innerHTML = total
-    ? ESTADOS.filter(s=>counts[s]).map(s => `<span class="chip st-${s}"><i></i>${counts[s]} ${s.toLowerCase()}${counts[s]>1?"s":""}</span>`).join("")
-    : `<span class="chip st-vacio"><i></i>Sin tareas esta semana</span>`;
+    ? `<span class="progress" title="Avance de la semana"><span class="bar">${ESTADOS.filter(s=>counts[s]).map(s => `<span style="width:${counts[s]/total*100}%;background:${COLOR[s]}"></span>`).join("")}</span>${activas ? `${hechas} de ${activas} hechas` : "Todo cancelado"}</span>`
+      + ESTADOS.filter(s=>counts[s]).map(s => `<span class="chip st-${s}"><i></i>${counts[s]} ${s.toLowerCase()}${counts[s]>1?"s":""}</span>`).join("")
+    : `<span class="chip st-vacio"><i></i>Semana libre por ahora</span>`;
+  const hora = realToday.getHours(), saludo = hora < 12 ? "¡Buenos días!" : hora < 19 ? "¡Buenas tardes!" : "¡Buenas noches!";
+  $("greet").innerHTML = `${saludo} <span class="wave" aria-hidden="true">👋</span> ${total ? `Esta semana hay ${total} ${total===1?"actividad":"actividades"} en la agenda.` : "Esta semana todavía no hay actividades."}`;
 
   const wk = key(weekStart);
   if (wk!==shownWeek) { replay($("week"), !shownWeek || Math.abs(parse(wk)-parse(shownWeek)) > 8*864e5 ? "go-fade" : wk > shownWeek ? "go-next" : "go-prev"); replay($("range"), "swap"); }
@@ -750,7 +837,8 @@ function renderWeek(){
       ${(EVENTOS[k]||[]).map(n => `<div class="special uni">${esc(n)}</div>`).join("")}
       <ul class="tasks">${shown.map(t => `<li class="${t.estado}">${obsPendiente(t)?'<span class="obs-flag" title="Tiene observaciones pendientes" aria-label="Tiene observaciones pendientes">!</span>':""}${t.inicio?`<time>${fmtH(t.inicio)}</time>`:""}<b>${esc(t.nombre)}</b></li>`).join("")}</ul>
       ${list.length>4?`<div class="more">+${list.length-4} más</div>`:""}
-      <div class="add-hint">${list.length?"Ver tablero":"+ Agregar"}</div>
+      ${!list.length && !sp && !(EVENTOS[k]||[]).length && i<5 ? '<div class="free">☕ Día libre</div>' : ""}
+      <div class="add-hint">${list.length?"Ver el día":"+ Añadir"}</div>
     </div>`;
   }).join("");
 }
@@ -802,7 +890,7 @@ function renderUpcoming(){
   const delAnio = Object.keys(ESPECIALES).filter(k => k.startsWith(YEAR+"-")).sort();
   const next = delAnio.filter(k => k >= from).slice(0,5);
   const list = next.length ? next : delAnio.slice(-3);
-  $("upcoming").innerHTML = list.map((k,i) => { const d = parse(k); return `<li style="--i:${i}"><span>${pad(d.getDate())} ${MESES[d.getMonth()].slice(0,3).toUpperCase()}</span><div>${esc(ESPECIALES[k][1])}</div></li>`; }).join("");
+  $("upcoming").innerHTML = list.map((k,i) => { const d = parse(k); return `<li style="--i:${i}"><span>${pad(d.getDate())} ${MESES[d.getMonth()].slice(0,3).toUpperCase()}</span><div><em aria-hidden="true">${ESPECIALES[k][0]==="Carnaval"?"🎭":"🎉"}</em>${esc(ESPECIALES[k][1])}</div></li>`; }).join("");
 }
 
 // ---------- Tablero del día ----------
@@ -851,7 +939,7 @@ function renderBoard(){
       </div>
       <div class="acts"><button type="button" data-a="edit">Editar</button><button type="button" data-a="del">Borrar</button></div>
     </article>`).join("")
-    : `<div class="empty"><span class="logo" aria-hidden="true"></span>No hay tareas para este día. Agrega la primera con el formulario de abajo.</div>`;
+    : `<div class="empty"><span class="big" aria-hidden="true">🗓️</span>Nada agendado por aquí todavía.<br>¿Añadimos la primera actividad? Usa el formulario de abajo.</div>`;
 }
 $("bList").onclick = async e => {
   const art = e.target.closest(".item"); if (!art) return;
@@ -872,7 +960,7 @@ $("bList").onclick = async e => {
     if (!btn.classList.contains("really")) { btn.classList.add("really"); btn.textContent = "¿Seguro?"; setTimeout(() => { if (btn.isConnected) { btn.classList.remove("really"); btn.textContent = "Borrar"; } }, 3000); return; }
     tasks[openDay] = list.filter(x => x.id!==t.id); if (!tasks[openDay].length) delete tasks[openDay];
     if (editingId===t.id) resetForm();
-    refresh(); await removeTask(t.id); toast("Tarea borrada");
+    refresh(); await removeTask(t.id); toast("Actividad borrada");
   }
 };
 
@@ -974,7 +1062,7 @@ $("form").onsubmit = async e => {
   if (t) { if ((t.observaciones||"") !== observaciones) data.obs_ok = false; Object.assign(t, data); }
   else list.push(t = { id: uid(), ...data, obs_ok: false });
   resetForm(); refresh(); await saveTask(openDay, t);
-  toast(wasEdit ? "Cambios guardados" : "Tarea agregada");
+  toast(wasEdit ? "¡Listo! Cambios guardados" : "¡Listo! Actividad agregada ✨");
 };
 
 let tt; function toast(m){ const t = $("toast"); t.textContent = m; t.classList.add("on"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("on"), 2200); }
