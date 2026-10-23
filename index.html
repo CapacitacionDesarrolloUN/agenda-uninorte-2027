@@ -607,6 +607,7 @@ h1.swap,.range.swap{animation:rise .45s var(--ease) backwards}
       <label>Observaciones <span class="opt">(opcional)</span><textarea id="fObs" maxlength="1000" rows="3" placeholder="Algo pendiente o para tener en cuenta en esta tarea"></textarea></label>
       <div class="err" id="fErr" hidden></div>
       <div class="btns">
+        <button class="btn" type="button" id="fCursos" hidden title="Abre Cursos abiertos con esta tarea lista para el diseñador">Añadir a cursos abiertos ↗</button>
         <button class="btn" type="button" id="fCancel" hidden>Cancelar edición</button>
         <button class="btn primary" type="submit" id="fSave">Agregar tarea</button>
       </div>
@@ -963,7 +964,7 @@ $("bList").onclick = async e => {
   if (a==="edit") {
     editingId = t.id;
     $("fNombre").value = t.nombre; setHora("fIni", t.inicio); setHora("fFin", t.fin); $("fUbi").value = t.ubicacion||""; $("fLink").value = t.link||""; $("fObs").value = t.observaciones||""; $("fEstado").value = t.estado; $("fMod").value = t.modalidad||""; syncMod(); clearMiss();
-    $("fTitle").textContent = "Editar tarea"; $("fSave").textContent = "Guardar cambios"; $("fCancel").hidden = false;
+    $("fTitle").textContent = "Editar tarea"; $("fSave").textContent = "Guardar cambios"; $("fCancel").hidden = false; $("fCursos").hidden = false;
     $("form").scrollIntoView({behavior:"smooth", block:"nearest"}); $("fNombre").focus();
   }
   if (a==="copy") { copyText(t.link, e.target.closest("button")); return; }
@@ -1030,7 +1031,7 @@ function setHora(id, v){
 
 function resetForm(){
   editingId = null; $("form").reset(); setHora("fIni",""); setHora("fFin",""); $("fEstado").value = "Pendiente"; $("fErr").hidden = true; syncMod(); clearMiss();
-  $("fTitle").textContent = "Nueva tarea"; $("fSave").textContent = "Agregar tarea"; $("fCancel").hidden = true;
+  $("fTitle").textContent = "Nueva tarea"; $("fSave").textContent = "Agregar tarea"; $("fCancel").hidden = true; $("fCursos").hidden = true;
 }
 $("fCancel").onclick = resetForm;
 function clearMiss(){ document.querySelectorAll("#form .miss").forEach(el => el.classList.remove("miss")); }
@@ -1043,6 +1044,24 @@ async function copyText(txt, btn){
   catch { const i = $("fLink"); if (btn.id==="fCopy") { i.select(); toast("Selecciona y copia con Ctrl+C"); } else { window.getSelection().selectAllChildren(btn.previousElementSibling); toast("Link seleccionado. Cópialo con Ctrl+C"); } }
 }
 $("fCopy").onclick = e => copyText($("fLink").value.trim(), e.currentTarget);
+// Abre la app de Cursos abiertos (vista de administrador) con una tarea nueva para el diseñador,
+// prellenada con lo que hay en el formulario. Los datos viajan en el #, que no llega a ningún servidor.
+$("fCursos").onclick = () => {
+  const url = window.AGENDA_CONFIG?.cursosUrl;
+  if (!url) { toast("Falta la dirección de Cursos abiertos en config.js."); return; }
+  const modalidad = $("fMod").value, ubicacion = $("fUbi").value.trim(), link = $("fLink").value.trim();
+  const lugar = [modalidad && `Modalidad: ${modalidad}`, ubicacion && modalidad!=="Virtual" && `Ubicación: ${ubicacion}`].filter(Boolean).join(" · ");
+  const datos = {
+    nombre: $("fNombre").value.trim(),
+    fecha: openDay,
+    hora_inicio: readHora("fIni") || "",
+    hora_fin: readHora("fFin") || "",
+    link_zoom: modalidad!=="Presencial" && /^https?:\/\//i.test(link) ? link : "",
+    observaciones: [lugar, $("fObs").value.trim()].filter(Boolean).join("\n").slice(0, 1000)
+  };
+  if (!datos.nombre) { toast("Escribe el nombre de la tarea primero."); $("fNombre").focus(); return; }
+  window.open(`${url.replace(/\/+$/, "")}/#agenda?${new URLSearchParams(datos)}`, "_blank", "noopener");
+};
 $("form").onsubmit = async e => {
   e.preventDefault();
   const nombre = $("fNombre").value.trim(), modalidad = $("fMod").value;
