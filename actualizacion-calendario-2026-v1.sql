@@ -1,5 +1,6 @@
 -- Agenda Uninorte: actualiza 2026 con el archivo «Calendario 2026 V1» (25 nov 2026).
 -- Pégalo completo en Supabase → SQL Editor → Run. Se puede correr más de una vez sin duplicar nada.
+-- El Simulacro del 27 oct no va porque ya estaba como «Simulacro mayor de emergencia 2026».
 -- Solo agrega tareas nuevas y marca como realizadas dos que el Excel ya pinta en verde. No borra ni cambia nada más.
 
 insert into public.tareas (id, fecha, nombre, inicio, fin, modalidad, ubicacion, estado) values
@@ -23,7 +24,6 @@ insert into public.tareas (id, fecha, nombre, inicio, fin, modalidad, ubicacion,
   ('xl26v1-018', '2026-05-28', 'Taller para la conservación auditiva', '14:00', '15:30', 'Presencial', 'Salón 22E', 'Realizado'),
   ('xl26v1-019', '2026-05-29', 'Brigada grupo 2 Atención Prehospitalaria', '08:00', '17:00', 'Presencial', '22E', 'Pendiente'),
   ('xl26v1-020', '2026-09-28', 'Manejo de crisis y desorden público', '14:00', '16:00', 'Virtual', '', 'Programado'),
-  ('xl26v1-021', '2026-10-27', 'Simulacro', '', '', '', '', 'Programado'),
   ('xl26v1-022', '2026-11-03', 'Revisar plan', '', '', '', '', 'Programado'),
   ('xl26v1-023', '2026-11-13', 'Presentación Efectiva y Expresión Oral', '14:00', '16:00', 'Virtual', '', 'Programado'),
   ('xl26v1-024', '2026-11-18', 'De la Observación a la Acción: Identificar para Prevenir.', '14:00', '15:30', 'Presencial', '22E', 'Programado'),
