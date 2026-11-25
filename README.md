@@ -25,6 +25,8 @@ La página sigue funcionando, pero guarda solo en el navegador de cada persona y
 
 Si la tabla se creó cuando la agenda era solo de 2027, corre una vez [`migracion-2026-2028.sql`](migracion-2026-2028.sql) en el SQL Editor. Amplía las fechas permitidas a 2026–2028 y carga las tareas de 2026 del archivo *Calendario 2026 V1.1*. Se puede correr más de una vez sin duplicar tareas.
 
+Las tareas que trae la versión *Calendario 2026 V1* (25 nov 2026) y no estaban en la V1.1 se cargan con [`actualizacion-calendario-2026-v1.sql`](actualizacion-calendario-2026-v1.sql), de la misma forma. Solo agrega tareas y marca como realizadas dos sesiones de octubre; no borra nada.
+
 ## Añadir a cursos abiertos
 
 Al editar una tarea aparece el botón **Añadir a cursos abiertos**. Sin salir de la agenda, crea en la app de [Cursos abiertos](https://programacion-cursos-abiertos.capacitacion-acb.workers.dev) una tarea para el diseñador con el nombre, la fecha, las horas, el link de la sesión y, en *Observaciones*, la modalidad, la ubicación y las observaciones. Toma lo que esté escrito en el formulario en ese momento. Si se vuelve a pulsar, actualiza esa misma tarea en vez de duplicarla (mientras el diseñador no la haya terminado). En Cursos abiertos aparece marcada «Desde la agenda» y con «Falta fecha de boletín», que el administrador completa allá.
